@@ -7,13 +7,16 @@
 #include <glm/gtc/type_ptr.hpp>
 
 #include <cstdio>
+#include <utility>
 
-Overlay::Overlay(GLFWwindow* window) {
+Overlay::Overlay(GLFWwindow* window, std::string iniPath) : iniPath(std::move(iniPath)) {
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
 
     ImGuiIO& io = ImGui::GetIO();
+    io.IniFilename = this->iniPath.c_str();
     io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
+    io.ConfigFlags |= ImGuiConfigFlags_NoMouse;
 
     ImGui::StyleColorsDark();
 
@@ -52,18 +55,15 @@ void Overlay::drawUI(Scene& scene, std::vector<Object>& objects, Camera& camera)
     if (selected >= (int)objects.size()) selected = (int)objects.size() - 1;
     if (selected < 0) selected = 0;
 
-    char label[32];
-    snprintf(label, sizeof(label), "Cube %d", selected);
-
     ImGui::Text("Object modifiers:");
-    if (ImGui::BeginCombo("object", label)) {
+    if (ImGui::BeginCombo("object", objects[selected].name.c_str())) {
         for (int i = 0; i < (int)objects.size(); i++) {
-            char item[32];
-            snprintf(item, sizeof(item), "Cube %d", i);
-            if (ImGui::Selectable(item, selected == i))
+            ImGui::PushID(i);   // names may repeat; the ID keeps each entry unique to ImGui
+            if (ImGui::Selectable(objects[i].name.c_str(), selected == i))
                 selected = i;
             if (selected == i)
                 ImGui::SetItemDefaultFocus();
+            ImGui::PopID();
         }
         ImGui::EndCombo();
     }
@@ -86,7 +86,7 @@ void Overlay::drawUI(Scene& scene, std::vector<Object>& objects, Camera& camera)
 
     ImGui::Text("Camera modifiers:");
     ImGui::SliderFloat("FOV", &camera.FOV, Camera::minFOV, Camera::maxFOV);
-    ImGui::SliderFloat("speed", &camera.speed, 1.0f, 20.0f);
+    ImGui::SliderFloat("speed", &camera.speed, 1.0f, 30.0f);
     ImGui::SliderFloat("sensitivity", &camera.sensitivity, 0.01f, 1.0f);
 
     ImGui::End();

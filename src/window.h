@@ -26,7 +26,7 @@ public:
 
     Camera* camPtr;
 
-    float deltaTime, lastFrame;
+    float currentTime = 0.0f, deltaTime = 0.0f, lastFrame = 0.0f;
 private:
     static void framebufferSizeCallback(GLFWwindow* window, int width, int height);
 

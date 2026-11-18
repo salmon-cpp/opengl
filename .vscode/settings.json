@@ -74,5 +74,8 @@
         "xtr1common": "cpp",
         "xutility": "cpp"
     },
-    "cmake.sourceDirectory": "C:/Users/rober/Documents/Projects/VSCode/opengl/include/glm"
+    "cmake.sourceDirectory": "${workspaceFolder}",
+    "cmake.buildDirectory": "${workspaceFolder}/build",
+    "cmake.generator": "Ninja",
+    "C_Cpp.default.compileCommands": "${workspaceFolder}/build/compile_commands.json"
 }

@@ -1,8 +1,9 @@
 # Build output
-main.exe
+build/
+.direnv/
+result
 *.exe
 *.o
-*.obj
 
 # Stale build artifacts (imgui is compiled from include/imgui/*.cpp by the build task)
 lib/libimgui.a

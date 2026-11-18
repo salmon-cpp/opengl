@@ -1,8 +1,10 @@
 #pragma once
 #include <glm/glm.hpp>
 
+#include <string>
+
 struct Light {
-    glm::vec3 position = glm::vec3(1.2f, 1.0f, 2.0f);
+    glm::vec3 position = glm::vec3(3);
     glm::vec3 color    = glm::vec3(1.0f);
     bool visible       = true;
 };
@@ -20,13 +22,18 @@ struct Transform {
 };
 
 struct Material {
-    glm::vec3 color = glm::vec3(1.0f);
+    glm::vec3 color = glm::vec3(0.8);
     bool useTexture = false;
     unsigned int textureID = 0;
 };
 
+struct Mesh;
+
 struct Object {
+    std::string name = "Object";
+    const Mesh* mesh = nullptr;
     Transform transform;
     Material material;
     bool visible = true;
+    glm::vec3 rotSpeed = glm::vec3(30.0f);
 };

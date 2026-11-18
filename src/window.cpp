@@ -89,9 +89,14 @@ void Window::processInput(Camera& camera) {
     if (glfwGetKey(window, GLFW_KEY_C) == GLFW_PRESS) {
         if (!tabPressed) {
             imguiFocus = !imguiFocus;
+
+            ImGuiIO& io = ImGui::GetIO();
+
             if (imguiFocus) {
+                io.ConfigFlags &= ~ImGuiConfigFlags_NoMouse;
                 glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
             } else {
+                io.ConfigFlags |= ImGuiConfigFlags_NoMouse;
                 glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
                 centerCursor();
@@ -125,9 +130,9 @@ void Window::processInput(Camera& camera) {
 }
 
 void Window::refresh() {
-    float currentFrame = glfwGetTime();
-    deltaTime = currentFrame - lastFrame;
-    lastFrame = currentFrame;
+    currentTime = glfwGetTime();
+    deltaTime = currentTime - lastFrame;
+    lastFrame = currentTime;
 
     glfwSwapBuffers(window);
     glfwPollEvents();

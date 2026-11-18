@@ -1,51 +1,52 @@
 {
-	"version": "2.0.0",
-	"tasks": [
-        {
-        "type": "cppbuild",
-        "label": "C/C++: g++.exe build active file",
-        "command": "C:/msys64/ucrt64/bin/g++.exe",
-        "args": [
-            "-g",
-            "-std=c++20",
-            
-            "-I${workspaceFolder}/include",
-            "-I${workspaceFolder}/include/imgui",
-            "-I${workspaceFolder}/include/imgui/backends",
-
-            "-L${workspaceFolder}/lib",
-
-            "${workspaceFolder}/src/main.cpp",
-            "${workspaceFolder}/src/shader.cpp",
-            "${workspaceFolder}/src/window.cpp",
-            "${workspaceFolder}/src/overlay.cpp",
-            "${workspaceFolder}/src/camera.cpp",
-            "${workspaceFolder}/src/glad.c",
-
-            "${workspaceFolder}/include/imgui/imgui.cpp",
-            "${workspaceFolder}/include/imgui/imgui_draw.cpp",
-            "${workspaceFolder}/include/imgui/imgui_tables.cpp",
-            "${workspaceFolder}/include/imgui/imgui_widgets.cpp",
-            "${workspaceFolder}/include/imgui/backends/imgui_impl_glfw.cpp",
-            "${workspaceFolder}/include/imgui/backends/imgui_impl_opengl3.cpp",
-
-            "-lglfw3dll",
-
-            "-o",
-            "${workspaceFolder}/main.exe"
-        ],
+    // All build logic lives in CMakeLists.txt; these tasks only call CMake.
+    // Ctrl+Shift+B runs "Build", which configures first (a no-op once build/ exists).
+    "version": "2.0.0",
+    "options": {
+        "cwd": "${workspaceFolder}"
+    },
+    "windows": {
         "options": {
-            "cwd": "${workspaceFolder}"
+            "env": {
+                // MSYS2 UCRT64 toolchain: gcc, cmake, ninja.
+                "PATH": "C:/msys64/ucrt64/bin;${env:PATH}"
+            }
+        }
+    },
+    "tasks": [
+        {
+            "label": "Configure",
+            "type": "process",
+            "command": "cmake",
+            "args": ["-S", ".", "-B", "build", "-G", "Ninja"],
+            "problemMatcher": []
         },
-        "problemMatcher": [
-            "$gcc"
-        ],
-        "group": {
-            "kind": "build",
-            "isDefault": true
+        {
+            "label": "Build",
+            "type": "process",
+            "command": "cmake",
+            "args": ["--build", "build"],
+            "dependsOn": "Configure",
+            "problemMatcher": {
+                "base": "$gcc",
+                "fileLocation": ["autoDetect", "${workspaceFolder}/build"]
+            },
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
         },
-        "detail": "compiler: C:/msys64/ucrt64/bin/g++.exe"
-    }
-
+        {
+            "label": "Clean rebuild",
+            "type": "process",
+            "command": "cmake",
+            "args": ["--build", "build", "--clean-first"],
+            "dependsOn": "Configure",
+            "problemMatcher": {
+                "base": "$gcc",
+                "fileLocation": ["autoDetect", "${workspaceFolder}/build"]
+            },
+            "group": "build"
+        }
     ]
 }

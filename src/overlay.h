@@ -3,11 +3,13 @@
 #include "types.h"
 #include "camera.h"
 
+#include <string>
 #include <vector>
 
 class Overlay {
 public:
-    Overlay(GLFWwindow* window);
+    // iniPath: where ImGui saves its window layout (must outlive the overlay).
+    Overlay(GLFWwindow* window, std::string iniPath);
     ~Overlay();
 
     void loopStart();
@@ -16,4 +18,5 @@ public:
 
 private:
     int selected = 0;
+    std::string iniPath;
 };
